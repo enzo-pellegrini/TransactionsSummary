@@ -35,8 +35,19 @@ class AccountsFragment : Fragment() {
             addAccount()
         }
 
+        viewModel.accounts.observe(viewLifecycleOwner) {
+            Log.i(TAG, "Accounts changed, now it's $it")
+        }
+
         return view
     }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.recheckAccount()
+    }
+
+
 
     @OptIn(PlaidActivityResultContract::class)
     private val linkAccountToPlaid =
@@ -46,14 +57,17 @@ class AccountsFragment : Fragment() {
                     Log.d("LoginFragment", "public token: ${it.publicToken}")
                     // Pass the Link Result to the view model
                     viewModel.registerLinkResult(it)
+                        .observe(viewLifecycleOwner) { success ->
+                        if (success == false) {
+                            Snackbar.make(binding.coordinator, "Failed getting getting item", Snackbar.LENGTH_LONG)
+                                .show()
+                        }
+                    }
 
-                    // Show the user some respect
-                    Snackbar.make(binding.coordinator, "Successfully added account", Snackbar.LENGTH_LONG)
-                        .show()
                 }
                 is LinkExit -> {
                     if (it.error != null) Log.e("LoginFragment", it.error!!.errorMessage)
-                    Snackbar.make(binding.coordinator, "Failed adding bank account", Snackbar.LENGTH_LONG)
+                    Snackbar.make(binding.coordinator, "Failed getting public token", Snackbar.LENGTH_LONG)
                         .show()
                 }
             }
@@ -71,5 +85,9 @@ class AccountsFragment : Fragment() {
                 linkAccountToPlaid.launch(linkTokenConfiguration)
             }
         }
+    }
+
+    companion object {
+        const val TAG = "AccountsFragment"
     }
 }

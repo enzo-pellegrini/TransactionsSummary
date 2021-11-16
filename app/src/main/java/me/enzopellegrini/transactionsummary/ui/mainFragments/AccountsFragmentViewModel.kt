@@ -1,7 +1,9 @@
 package me.enzopellegrini.transactionsummary.ui.mainFragments
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.plaid.internal.core.protos.link.workflow.primitives.SdkResult
 import com.plaid.link.result.LinkResult
 import com.plaid.link.result.LinkSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,6 +16,7 @@ import javax.inject.Inject
 class AccountsFragmentViewModel @Inject constructor(
     private val accountsRepository: AccountsRepository
 ) : ViewModel() {
+    val accounts = accountsRepository.accounts
 
     fun getLinkToken(): SingleLiveEvent<Map<String, String>?> {
         val out = SingleLiveEvent<Map<String, String>?>()
@@ -27,6 +30,19 @@ class AccountsFragmentViewModel @Inject constructor(
         return out
     }
 
-    fun registerLinkResult(result: LinkSuccess) =
-        accountsRepository.registerLinkResult(result)
+    fun registerLinkResult(result: LinkSuccess): SingleLiveEvent<Boolean> {
+        val out = SingleLiveEvent<Boolean>()
+        accountsRepository.registerLinkResult(result).addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                out.setValue(false)
+            } else {
+                out.setValue(true)
+            }
+        }
+        return out
+    }
+
+    fun recheckAccount() {
+        accountsRepository.recheckAccount()
+    }
 }
