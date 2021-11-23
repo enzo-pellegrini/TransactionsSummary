@@ -6,16 +6,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import dagger.hilt.EntryPoint
 import dagger.hilt.android.AndroidEntryPoint
 import me.enzopellegrini.transactionsummary.R
 import me.enzopellegrini.transactionsummary.databinding.FragmentHomeBinding
+import me.enzopellegrini.transactionsummary.ui.CommonViewModel
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by viewModels()
+    private val loginViewModel: CommonViewModel by activityViewModels()
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
@@ -31,7 +33,7 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         // Navigate to the login fragment if not logged in
-        viewModel.isLoggedIn.observe(viewLifecycleOwner) { isLoggedIn ->
+        loginViewModel.isLoggedIn.observe(viewLifecycleOwner) { isLoggedIn ->
             if (!isLoggedIn) {
                 Log.d("HomeFragment", "Navigating to login fragment")
                 findNavController().navigate(R.id.firebaseLogin)

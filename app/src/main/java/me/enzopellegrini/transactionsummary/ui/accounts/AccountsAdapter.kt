@@ -21,7 +21,7 @@ class AccountsAdapter(val data: List<Item>, val onClick: (String)->Unit) : Recyc
         val view: MaterialCardView = LayoutInflater.from(parent.context)
             .inflate(R.layout.account_item, parent, false) as MaterialCardView
 
-        view.isChecked = true
+//        view.isChecked = true // Should decide if I want to do this
 
         view.setOnClickListener {
             view.isChecked = !view.isChecked

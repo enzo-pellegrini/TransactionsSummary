@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.functions.FirebaseFunctions
@@ -61,7 +62,7 @@ class AccountsRepository @Inject constructor() {
 
     private fun recheckAccount() {
         if (registration != null) {
-            registration?.remove()
+            registration!!.remove()
             registration = null
         }
 
@@ -71,7 +72,7 @@ class AccountsRepository @Inject constructor() {
             val uid = auth.currentUser?.uid!!
             fetchAccounts(uid)
             // This should work, must show the prof
-            registration = db.collection("items-per-group")
+            registration = db.collection("items-per-user")
                 .document(uid)
                 .collection("items")
                 .addSnapshotListener { snapshot, e ->
@@ -83,14 +84,10 @@ class AccountsRepository @Inject constructor() {
                     if (snapshot != null) {
                         Log.d(TAG, snapshot.toString())
                         _accounts.value = snapshot.toObjects(Item::class.java)
-//                            .map { d -> d.get("institutionName") as String }
-//                            .map { n -> AccountUi(n) }
-//                            .toList()
                     }
                 }
         }
     }
-
 
     private fun fetchAccounts(uid: String) {
         db.collection("items-per-user")
@@ -100,9 +97,6 @@ class AccountsRepository @Inject constructor() {
             .addOnCompleteListener { task ->
                 task.addOnSuccessListener { query ->
                     _accounts.value = query.toObjects(Item::class.java)
-//                        .map { d -> d.get("institution_name") as String }
-//                        .map { n -> AccountUi(n) }
-//                        .toList()
                 }
             }
     }
@@ -128,7 +122,6 @@ class AccountsRepository @Inject constructor() {
     }
 }
 
-//data class AccountUi(val institutionName: String)
 
 data class Item(
     val institution_name: String = "",
