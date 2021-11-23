@@ -70,6 +70,7 @@ class AccountsRepository @Inject constructor() {
         } else {
             val uid = auth.currentUser?.uid!!
             fetchAccounts(uid)
+            // This should work, must show the prof
             registration = db.collection("items-per-group")
                 .document(uid)
                 .collection("items")
@@ -80,6 +81,7 @@ class AccountsRepository @Inject constructor() {
                     }
 
                     if (snapshot != null) {
+                        Log.d(TAG, snapshot.toString())
                         _accounts.value = snapshot.toObjects(Item::class.java)
 //                            .map { d -> d.get("institutionName") as String }
 //                            .map { n -> AccountUi(n) }
@@ -106,7 +108,14 @@ class AccountsRepository @Inject constructor() {
     }
 
     fun deleteItem(itemId: String) {
-        // Should delete item with itemId
+        // Does delete on firebase
+        val ref = db.collection("items-per-user")
+            .document(auth.currentUser?.uid!!)
+            .collection("items")
+            .document(itemId)
+        ref.delete()
+            .addOnSuccessListener {  }
+            .addOnFailureListener {  }
     }
 
 //    init {
