@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.plaid.link.OpenPlaidLink
 import com.plaid.link.PlaidActivityResultContract
@@ -15,6 +16,7 @@ import com.plaid.link.result.LinkExit
 import com.plaid.link.result.LinkSuccess
 import dagger.hilt.android.AndroidEntryPoint
 import me.enzopellegrini.transactionsummary.databinding.FragmentAccountsBinding
+import me.enzopellegrini.transactionsummary.ui.accounts.AccountsAdapter
 
 
 @AndroidEntryPoint
@@ -37,14 +39,17 @@ class AccountsFragment : Fragment() {
 
         viewModel.accounts.observe(viewLifecycleOwner) {
             Log.i(TAG, "Accounts changed, now it's $it")
+            binding.accountsList.layoutManager = LinearLayoutManager(context)
+            binding.accountsList.adapter =
+                AccountsAdapter(it) {
+                    viewModel.deleteItem(it)
+                }
         }
 
-        return view
-    }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.recheckAccount()
+        // RecyclerView
+
+        return view
     }
 
 

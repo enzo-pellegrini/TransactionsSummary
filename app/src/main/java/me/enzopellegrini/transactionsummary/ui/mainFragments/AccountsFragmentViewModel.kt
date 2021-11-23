@@ -1,8 +1,6 @@
 package me.enzopellegrini.transactionsummary.ui.mainFragments
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.plaid.internal.core.protos.link.workflow.primitives.SdkResult
 import com.plaid.link.result.LinkResult
 import com.plaid.link.result.LinkSuccess
@@ -10,12 +8,16 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import me.enzopellegrini.transactionsummary.SingleLiveEvent
 import me.enzopellegrini.transactionsummary.data.AccountsRepository
+import me.enzopellegrini.transactionsummary.data.Item
 import javax.inject.Inject
 
 @HiltViewModel
 class AccountsFragmentViewModel @Inject constructor(
     private val accountsRepository: AccountsRepository
 ) : ViewModel() {
+
+    // This apparently is the correct method, because it's possible by switching
+    // between pages pretty fast to make the page crash (at least with log)
     val accounts = accountsRepository.accounts
 
     fun getLinkToken(): SingleLiveEvent<Map<String, String>?> {
@@ -42,7 +44,7 @@ class AccountsFragmentViewModel @Inject constructor(
         return out
     }
 
-    fun recheckAccount() {
-        accountsRepository.recheckAccount()
+    fun deleteItem(itemId: String) {
+        accountsRepository.deleteItem(itemId)
     }
 }

@@ -13,12 +13,13 @@ import com.google.firebase.functions.ktx.functions
 import com.google.firebase.ktx.Firebase
 import com.plaid.link.result.*
 import javax.inject.Inject
+import javax.inject.Singleton
 
 
-
+@Singleton
 class AccountsRepository @Inject constructor() {
-    private val _accounts = MutableLiveData<List<AccountUi>>()
-    val accounts: LiveData<List<AccountUi>> = _accounts
+    private val _accounts = MutableLiveData<List<Item>>()
+    val accounts: LiveData<List<Item>> = _accounts
 
     private var registration: ListenerRegistration? = null
 
@@ -26,11 +27,16 @@ class AccountsRepository @Inject constructor() {
     private val functions: FirebaseFunctions by lazy { Firebase.functions }
     private val auth: FirebaseAuth by lazy { Firebase.auth }
 
+    private var prevUser: String? = null
+
     // Get the connected bank accounts and recheck every time the auth state changes
     init {
         recheckAccount()
         auth.addAuthStateListener {
-            recheckAccount()
+            if (it.currentUser?.uid != prevUser) {
+                recheckAccount()
+                prevUser = it.currentUser?.uid
+            }
         }
     }
 
@@ -46,14 +52,14 @@ class AccountsRepository @Inject constructor() {
             .call(hashMapOf(
                 "public_token" to result.publicToken,
                 "institution_name" to result.metadata.institution?.name,
-                "account_ids" to result.metadata.accounts.map { it.id }
+                "account_ids" to result.metadata.accounts.map { it.id },
             ))
             .continueWith { task ->
                 task.result?.data
             }
 
 
-    fun recheckAccount() {
+    private fun recheckAccount() {
         if (registration != null) {
             registration?.remove()
             registration = null
@@ -74,10 +80,10 @@ class AccountsRepository @Inject constructor() {
                     }
 
                     if (snapshot != null) {
-                        _accounts.value = snapshot.documents
-                            .map { d -> d.get("institutionName") as String }
-                            .map { n -> AccountUi(n) }
-                            .toList()
+                        _accounts.value = snapshot.toObjects(Item::class.java)
+//                            .map { d -> d.get("institutionName") as String }
+//                            .map { n -> AccountUi(n) }
+//                            .toList()
                     }
                 }
         }
@@ -89,15 +95,23 @@ class AccountsRepository @Inject constructor() {
             .document(uid)
             .collection("items")
             .get()
-            .addOnCompleteListener {
-                it.addOnSuccessListener {
-                    _accounts.value = it.documents
-                        .map { d -> d.get("institution_name") as String }
-                        .map { n -> AccountUi(n) }
-                        .toList()
+            .addOnCompleteListener { task ->
+                task.addOnSuccessListener { query ->
+                    _accounts.value = query.toObjects(Item::class.java)
+//                        .map { d -> d.get("institution_name") as String }
+//                        .map { n -> AccountUi(n) }
+//                        .toList()
                 }
             }
     }
+
+    fun deleteItem(itemId: String) {
+        // Should delete item with itemId
+    }
+
+//    init {
+//        db.collection("items-per-user/${}")
+//    }
 
 
     companion object {
@@ -105,5 +119,9 @@ class AccountsRepository @Inject constructor() {
     }
 }
 
-// TODO: Move to model folder
-data class AccountUi(val institutionName: String)
+//data class AccountUi(val institutionName: String)
+
+data class Item(
+    val institution_name: String = "",
+    val item_id: String = ""
+)
