@@ -18,14 +18,8 @@ class AccountsAdapter(val data: List<Item>, val onClick: (String)->Unit) : Recyc
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view: MaterialCardView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.account_item, parent, false) as MaterialCardView
-
-//        view.isChecked = true // Should decide if I want to do this
-
-        view.setOnClickListener {
-            view.isChecked = !view.isChecked
-        }
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.account_item, parent, false)
 
         return ViewHolder(view)
     }
@@ -33,6 +27,10 @@ class AccountsAdapter(val data: List<Item>, val onClick: (String)->Unit) : Recyc
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.textView.text = data[position].institution_name
         holder.deleteButton.setOnClickListener { onClick(data[position].item_id) }
+//        card.isChecked = true // Should decide if I want to do this
+//        card.setOnClickListener {
+//            card.isChecked = !card.isChecked
+//        }
     }
 
     override fun getItemCount(): Int {

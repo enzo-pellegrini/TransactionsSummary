@@ -1,4 +1,4 @@
-package me.enzopellegrini.transactionsummary.ui.startFragments
+package me.enzopellegrini.transactionsummary.ui.login
 
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel

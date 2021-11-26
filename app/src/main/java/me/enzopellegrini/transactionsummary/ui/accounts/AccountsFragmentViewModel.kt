@@ -1,4 +1,4 @@
-package me.enzopellegrini.transactionsummary.ui.mainFragments
+package me.enzopellegrini.transactionsummary.ui.accounts
 
 import androidx.lifecycle.*
 import com.plaid.internal.core.protos.link.workflow.primitives.SdkResult

@@ -1,4 +1,4 @@
-package me.enzopellegrini.transactionsummary.ui.mainFragments
+package me.enzopellegrini.transactionsummary.ui.accounts
 
 import android.os.Bundle
 import android.util.Log
@@ -20,7 +20,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import me.enzopellegrini.transactionsummary.R
 import me.enzopellegrini.transactionsummary.databinding.FragmentAccountsBinding
 import me.enzopellegrini.transactionsummary.ui.CommonViewModel
-import me.enzopellegrini.transactionsummary.ui.accounts.AccountsAdapter
 
 
 @AndroidEntryPoint

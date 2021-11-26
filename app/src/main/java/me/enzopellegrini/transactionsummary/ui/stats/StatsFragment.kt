@@ -1,4 +1,4 @@
-package me.enzopellegrini.transactionsummary.ui.mainFragments
+package me.enzopellegrini.transactionsummary.ui.stats
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

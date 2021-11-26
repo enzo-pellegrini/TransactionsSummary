@@ -1,4 +1,4 @@
-package me.enzopellegrini.transactionsummary.ui.startFragments
+package me.enzopellegrini.transactionsummary.ui.login
 
 import android.app.Activity.RESULT_OK
 import android.os.Bundle
@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController

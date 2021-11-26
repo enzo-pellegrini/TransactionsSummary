@@ -7,21 +7,21 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="me.enzopellegrini.transactionsummary.ui.mainFragments.HomeFragment"
+        android:name="me.enzopellegrini.transactionsummary.ui.home.HomeFragment"
         android:label="Home" />
     <fragment
         android:id="@+id/firebaseLogin"
-        android:name="me.enzopellegrini.transactionsummary.ui.startFragments.FirebaseLogin"
+        android:name="me.enzopellegrini.transactionsummary.ui.login.FirebaseLogin"
         android:label="firebase_login_fragment"
         tools:layout="@layout/firebase_login_fragment" />
     <fragment
         android:id="@+id/navigation_stats"
-        android:name="me.enzopellegrini.transactionsummary.ui.mainFragments.StatsFragment"
+        android:name="me.enzopellegrini.transactionsummary.ui.stats.StatsFragment"
         android:label="Stats"
         tools:layout="@layout/fragment_stats" />
     <fragment
         android:id="@+id/navigation_accounts"
-        android:name="me.enzopellegrini.transactionsummary.ui.mainFragments.AccountsFragment"
+        android:name="me.enzopellegrini.transactionsummary.ui.accounts.AccountsFragment"
         android:label="Accounts"
         tools:layout="@layout/fragment_accounts" />
 </navigation>

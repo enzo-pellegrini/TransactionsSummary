@@ -1,4 +1,4 @@
-package me.enzopellegrini.transactionsummary.ui.mainFragments
+package me.enzopellegrini.transactionsummary.ui.stats
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
