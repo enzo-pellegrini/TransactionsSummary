@@ -11,6 +11,7 @@ import me.enzopellegrini.transactionsummary.data.Transaction
 class TransactionsAdapter(val all: List<Transaction>) : RecyclerView.Adapter<TransactionsAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val nameView: TextView = view.findViewById(R.id.transaction_name)
+        val amountView: TextView = view.findViewById(R.id.transaction_amount)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -22,6 +23,7 @@ class TransactionsAdapter(val all: List<Transaction>) : RecyclerView.Adapter<Tra
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.nameView.text = all[position].name
+        holder.amountView.text = "${all[position].amount}$"
     }
 
     override fun getItemCount() =
