@@ -58,7 +58,7 @@ class HomeFragment : Fragment() {
                                 .actionNavigationHomeToTransactionPage(it)
                             findNavController().navigate(action)
                         }, {
-                            Snackbar.make(binding.root, it.toString(), Snackbar.LENGTH_SHORT).show()
+//                            Snackbar.make(binding.root, it.toString(), Snackbar.LENGTH_SHORT).show()
                         })
                         rv.layoutManager = LinearLayoutManager(context)
                     }

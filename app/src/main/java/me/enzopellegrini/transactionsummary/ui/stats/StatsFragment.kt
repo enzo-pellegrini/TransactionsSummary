@@ -8,13 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.anychart.AnyChart
-import com.anychart.AnyChartView
-import com.anychart.chart.common.dataentry.DataEntry
-import com.anychart.chart.common.listener.Event
-import com.anychart.chart.common.listener.ListenersInterface
-import com.anychart.charts.Pie
 import dagger.hilt.android.AndroidEntryPoint
 import me.enzopellegrini.transactionsummary.R
 import me.enzopellegrini.transactionsummary.databinding.FragmentStatsBinding
@@ -40,29 +35,29 @@ class StatsFragment : Fragment() {
             }
         }
 
-        viewModel.pieData.observe(viewLifecycleOwner) { data ->
-            buildPieChart(data, binding.categoryChart)
+
+        binding.categoryChart.let { chart ->
+            chart.centerText = "Transactions by category"
+            chart.setCenterTextSize(20.0F)
+            chart.setDrawCenterText(true)
+
+            chart.legend.isEnabled = false
+            chart.description.isEnabled = false
+
+            chart.setTouchEnabled(false)
+            chart.isRotationEnabled = false
+            chart.isHighlightPerTapEnabled = false
+
+            viewModel.pieData.observe(viewLifecycleOwner) { data ->
+                chart.data = data
+                chart.invalidate()
+            }
         }
+
 
         return view
     }
 
-    private fun buildPieChart(data: List<DataEntry>, chart: AnyChartView) {
-        val pie = AnyChart.pie()
-
-        pie.data(data)
-        pie.title(getString(R.string.category_pie_title))
-//        pie.labels().position("outside")
-        pie.setOnClickListener(object : ListenersInterface.OnClickListener() {
-            override fun onClick(event: Event?) {
-            }
-        })
-
-        chart.setChart(pie)
-        chart.setOnClickListener { }
-
-        Log.d(TAG, "Data: $data");
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()

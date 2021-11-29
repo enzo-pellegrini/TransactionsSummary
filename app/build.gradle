@@ -55,8 +55,6 @@ dependencies {
 
     // Hilt
     implementation "com.google.dagger:hilt-android:2.38.1"
-    implementation 'androidx.annotation:annotation:1.2.0'
-    implementation 'com.android.support:cardview-v7:28.0.0'
     kapt "com.google.dagger:hilt-compiler:2.38.1"
 
 
@@ -70,8 +68,11 @@ dependencies {
     implementation 'com.plaid.link:sdk-core:3.6.1'
 
 
-    // Anychart-Android
-    implementation 'com.github.AnyChart:AnyChart-Android:1.1.2'
+//    // Anychart-Android
+//    implementation 'com.github.AnyChart:AnyChart-Android:1.1.2'
+
+    // MPAndroidChart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
     // Moshi
     implementation 'com.squareup.moshi:moshi-kotlin:1.9.3'

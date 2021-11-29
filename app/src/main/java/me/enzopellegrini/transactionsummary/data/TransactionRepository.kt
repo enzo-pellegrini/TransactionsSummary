@@ -68,7 +68,7 @@ class TransactionRepository @Inject constructor() {
     val summary: LiveData<Map<String, SegmentSummary>> by lazy {
         Transformations.map(transactions) { all ->
             all
-//                .filter { it.amount >= 0 }
+                .filter { it.amount >= 0 }
                 .groupBy { it.category_id }
                 .map {
                     Pair(
