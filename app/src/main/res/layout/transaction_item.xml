@@ -19,12 +19,12 @@
         android:text="30$"
         android:padding="16dp" />
 
-    <com.google.android.material.divider.MaterialDivider
-        android:layout_below="@id/transaction_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:dividerInsetEnd="20dp"
-        app:dividerInsetStart="32dp" />
+<!--    <com.google.android.material.divider.MaterialDivider-->
+<!--        android:layout_below="@id/transaction_name"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:dividerInsetEnd="20dp"-->
+<!--        app:dividerInsetStart="32dp" />-->
 
 
 </RelativeLayout>
