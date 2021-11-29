@@ -8,7 +8,12 @@
     <fragment
         android:id="@+id/navigation_home"
         android:name="me.enzopellegrini.transactionsummary.ui.home.HomeFragment"
-        android:label="Home" />
+        android:label="Home" >
+        <action
+            android:id="@+id/action_navigation_home_to_transaction_page"
+            app:destination="@id/transaction_page"
+            app:enterAnim="@anim/fui_slide_in_right" />
+    </fragment>
     <fragment
         android:id="@+id/firebaseLogin"
         android:name="me.enzopellegrini.transactionsummary.ui.login.FirebaseLogin"
@@ -24,4 +29,12 @@
         android:name="me.enzopellegrini.transactionsummary.ui.accounts.AccountsFragment"
         android:label="Accounts"
         tools:layout="@layout/fragment_accounts" />
+    <fragment
+        android:id="@+id/transaction_page"
+        android:name="me.enzopellegrini.transactionsummary.ui.transactionPage.transaction_page"
+        android:label="Details">
+        <argument
+            android:name="transaction_position"
+            app:argType="integer" />
+    </fragment>
 </navigation>

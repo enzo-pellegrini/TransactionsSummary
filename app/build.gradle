@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'dagger.hilt.android.plugin'
+    id 'androidx.navigation.safeargs.kotlin'
 }
 
 apply plugin: 'kotlin-kapt'
@@ -55,6 +56,7 @@ dependencies {
     // Hilt
     implementation "com.google.dagger:hilt-android:2.38.1"
     implementation 'androidx.annotation:annotation:1.2.0'
+    implementation 'com.android.support:cardview-v7:28.0.0'
     kapt "com.google.dagger:hilt-compiler:2.38.1"
 
 
@@ -66,6 +68,17 @@ dependencies {
 
     // Plaid
     implementation 'com.plaid.link:sdk-core:3.6.1'
+
+
+    // Anychart-Android
+    implementation 'com.github.AnyChart:AnyChart-Android:1.1.2'
+
+    // Moshi
+    implementation 'com.squareup.moshi:moshi-kotlin:1.9.3'
+
+    // Retrofit with Moshi Converter
+    implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
+
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.3.1'

@@ -1,6 +1,7 @@
 package me.enzopellegrini.transactionsummary.ui.home
 
 import android.os.Bundle
+import android.text.Layout
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,10 +10,12 @@ import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import me.enzopellegrini.transactionsummary.R
 import me.enzopellegrini.transactionsummary.databinding.FragmentHomeBinding
@@ -44,17 +47,19 @@ class HomeFragment : Fragment() {
             }
         }
 
-//        if (commonViewModel.hasAccounts()) {
-//        binding.transactionsList.let {
-//            it.adapter = TransactionsAdapter()
-//            it.layoutManager = LinearLayoutManager(context)
-//        }
+
         commonViewModel.hasAccounts.observe(viewLifecycleOwner) {
             if (it) {
                 binding.goToAccounts.visibility = INVISIBLE
                 binding.transactionsList.let { rv ->
-                    viewModel.transactions.observe(viewLifecycleOwner) {
-                        rv.adapter = TransactionsAdapter(it!!)
+                    viewModel.transactions.observe(viewLifecycleOwner) { all ->
+                        rv.adapter = TransactionsAdapter(all!!, {
+                            val action = HomeFragmentDirections
+                                .actionNavigationHomeToTransactionPage(it)
+                            findNavController().navigate(action)
+                        }, {
+                            Snackbar.make(binding.root, it.toString(), Snackbar.LENGTH_SHORT).show()
+                        })
                         rv.layoutManager = LinearLayoutManager(context)
                     }
                 }
@@ -62,6 +67,7 @@ class HomeFragment : Fragment() {
                 binding.goToAccounts.visibility = VISIBLE
             }
         }
+
         binding.goToAccounts.setOnClickListener {
             findNavController().navigate(R.id.navigation_accounts)
         }

@@ -16,4 +16,7 @@
     <string name="stats">Statistics</string>
     <string name="accounts">Accounts</string>
     <string name="default_account_name">Banca dei Panni</string>
+    <string name="category_chart">Cageory chart</string>
+    <string name="category_pie_title">Spending by category</string>
+    <string name="left_arrow">Left Arrow</string>
 </resources>
