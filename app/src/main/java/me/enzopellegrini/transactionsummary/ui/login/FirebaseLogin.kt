@@ -56,15 +56,22 @@ class FirebaseLogin : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        (activity as AppCompatActivity).supportActionBar?.hide()
-        (activity as StartActivity).nav.visibility = View.GONE
+//        (activity as AppCompatActivity).supportActionBar?.hide()
+//        (activity as StartActivity).nav.visibility = View.GONE
     }
 
     override fun onStop() {
         super.onStop()
-        (activity as AppCompatActivity).supportActionBar?.show()
-        (activity as StartActivity).nav.visibility = View.VISIBLE
+//        (activity as AppCompatActivity).supportActionBar?.show()
+//        (activity as StartActivity).nav.visibility = View.VISIBLE
     }
+
+
+//    override fun onDestroy() {
+//        super.onDestroy()
+//        (activity as AppCompatActivity).supportActionBar?.show()
+//        (activity as StartActivity).nav.visibility = View.VISIBLE
+//    }
 
 
     override fun onDestroyView() {

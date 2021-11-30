@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import dagger.hilt.android.lifecycle.HiltViewModel
-import me.enzopellegrini.transactionsummary.SingleLiveEvent
+import me.enzopellegrini.transactionsummary.data.FirestoreTransaction
 import me.enzopellegrini.transactionsummary.data.Transaction
 import me.enzopellegrini.transactionsummary.data.TransactionRepository
 import javax.inject.Inject

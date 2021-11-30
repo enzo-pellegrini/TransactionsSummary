@@ -1,16 +1,12 @@
 package me.enzopellegrini.transactionsummary.ui.stats
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.utils.ColorTemplate
-import com.google.firebase.firestore.model.FieldIndex
 import dagger.hilt.android.lifecycle.HiltViewModel
-import me.enzopellegrini.transactionsummary.data.SegmentSummary
 import me.enzopellegrini.transactionsummary.data.TransactionRepository
 import javax.inject.Inject
 
@@ -29,7 +25,7 @@ class StatsViewModel @Inject constructor(
 //    }
 
 
-    val pieData = Transformations.map(transactionRepository.summary) { summary ->
+    val pieData = Transformations.map(transactionRepository.categorySummary) { summary ->
         // Weird api
         val set = PieDataSet(summary
             .toList()
@@ -40,10 +36,15 @@ class StatsViewModel @Inject constructor(
                 )
             },
             "Transactions by category")
-        set.colors = ColorTemplate.PASTEL_COLORS.toList()
+        set.colors = ColorTemplate.JOYFUL_COLORS.toList()
+        set.sliceSpace = 2.0F
 
         PieData(set)
     }
 
+
+//    val lineData = Transformations.map(transactionRepository.itemSummary) { summary ->
+//        val set
+//    }
 
 }

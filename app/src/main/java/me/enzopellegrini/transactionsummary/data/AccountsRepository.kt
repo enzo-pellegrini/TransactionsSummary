@@ -4,15 +4,14 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.functions.FirebaseFunctions
-import com.google.firebase.functions.ktx.functions
 import com.google.firebase.ktx.Firebase
 import com.plaid.link.result.*
+import me.enzopellegrini.transactionsummary.authInstance
+import me.enzopellegrini.transactionsummary.firestoreInstance
+import me.enzopellegrini.transactionsummary.functionsInstance
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -24,9 +23,22 @@ class AccountsRepository @Inject constructor() {
 
     private var registration: ListenerRegistration? = null
 
-    private val db = Firebase.firestore
-    private val functions: FirebaseFunctions by lazy { Firebase.functions }
-    private val auth: FirebaseAuth by lazy { Firebase.auth }
+//    private val db = Firebase.firestore
+//    private val functions: FirebaseFunctions by lazy {
+//        val i = Firebase.functions
+//        i.useEmulator("10.0.2.2", 5001)
+//        i
+//    }
+//    private val auth: FirebaseAuth by lazy {
+//        val i = Firebase.auth
+//        i.useEmulator("10.0.2.2", 9099)
+//        i
+//    }
+
+    private val functions = functionsInstance
+    private val auth = authInstance
+    private val db = firestoreInstance
+
 
     private var prevUser: String? = null
 
@@ -42,14 +54,14 @@ class AccountsRepository @Inject constructor() {
     }
 
     fun getLinkToken(): Task<Map<String, String>> =
-        functions.getHttpsCallable("getLinkToken")
+        functions.getHttpsCallable("produceLinkToken")
             .call()
             .continueWith { task ->
                 task.result?.data as Map<String, String>
             }
 
     fun registerLinkResult(result: LinkSuccess): Task<Any> =
-        functions.getHttpsCallable("registerPublicToken")
+        functions.getHttpsCallable("savePublicToken")
             .call(hashMapOf(
                 "public_token" to result.publicToken,
                 "institution_name" to result.metadata.institution?.name,
@@ -70,46 +82,72 @@ class AccountsRepository @Inject constructor() {
             _accounts.value = listOf()
         } else {
             val uid = auth.currentUser?.uid!!
-            fetchAccounts(uid)
-            // This should work, must show the prof
-            registration = db.collection("items-per-user")
-                .document(uid)
-                .collection("items")
-                .addSnapshotListener { snapshot, e ->
+
+            val queryRef = db.collection("items")
+                .whereArrayContains("read_access", uid);
+
+            queryRef.get()
+                .addOnSuccessListener { query ->
+                    _accounts.value = query.toObjects(Item::class.java)
+                }
+            queryRef.addSnapshotListener { snapshot, e ->
                     if (e != null) {
                         Log.d(TAG, "Query failed")
                         return@addSnapshotListener
                     }
 
                     if (snapshot != null) {
-                        Log.d(TAG, snapshot.toString())
                         _accounts.value = snapshot.toObjects(Item::class.java)
                     }
                 }
+
+
+//            fetchAccounts(uid)
+//            // This should work, must show the prof
+//            registration = db.collection("items-per-user")
+//                .document(uid)
+//                .collection("items")
+//                .addSnapshotListener { snapshot, e ->
+//                    if (e != null) {
+//                        Log.d(TAG, "Query failed")
+//                        return@addSnapshotListener
+//                    }
+//
+//                    if (snapshot != null) {
+//                        Log.d(TAG, snapshot.toString())
+//                        _accounts.value = snapshot.toObjects(Item::class.java)
+//                    }
+//                }
         }
     }
 
-    private fun fetchAccounts(uid: String) {
-        db.collection("items-per-user")
-            .document(uid)
-            .collection("items")
-            .get()
-            .addOnCompleteListener { task ->
-                task.addOnSuccessListener { query ->
-                    _accounts.value = query.toObjects(Item::class.java)
-                }
-            }
-    }
+//    private fun fetchAccounts(uid: String) {
+//        db.collection("items-per-user")
+//            .document(uid)
+//            .collection("items")
+//            .get()
+//            .addOnCompleteListener { task ->
+//                task.addOnSuccessListener { query ->
+//                    _accounts.value = query.toObjects(Item::class.java)
+//                }
+//            }
+//    }
 
     fun deleteItem(itemId: String) {
-        // Does delete on firebase
-        val ref = db.collection("items-per-user")
-            .document(auth.currentUser?.uid!!)
-            .collection("items")
+//        // Does delete on firebase
+//        val ref = db.collection("items-per-user")
+//            .document(auth.currentUser?.uid!!)
+//            .collection("items")
+//            .document(itemId)
+//        ref.delete()
+//            .addOnSuccessListener {  }
+//            .addOnFailureListener {  }
+
+        db.collection("items")
             .document(itemId)
-        ref.delete()
-            .addOnSuccessListener {  }
-            .addOnFailureListener {  }
+            .update(mapOf(
+                Pair("read_access", FieldValue.arrayRemove(auth.currentUser?.uid!!))
+            ))
     }
 
 //    init {
@@ -125,5 +163,7 @@ class AccountsRepository @Inject constructor() {
 
 data class Item(
     val institution_name: String = "",
-    val item_id: String = ""
+    val item_id: String = "",
+    val owner: String = "",
+    val read_access: List<String> = listOf()
 )

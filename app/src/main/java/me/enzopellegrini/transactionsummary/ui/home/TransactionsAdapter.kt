@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import me.enzopellegrini.transactionsummary.R
+import me.enzopellegrini.transactionsummary.data.FirestoreTransaction
 import me.enzopellegrini.transactionsummary.data.Transaction
 
 class TransactionsAdapter(

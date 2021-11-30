@@ -31,7 +31,7 @@ class transaction_page : Fragment() {
             binding.transactionName.text = it.name
             binding.transactionAmountConv.text = "${it.amount}$"
             binding.transactionDate.text = it.date.toString()
-            binding.transactionCategory.text = "It has category of ${it.category_id}"
+            binding.transactionCategory.text = "It has category of ${it.category}"
         }
 
         return view

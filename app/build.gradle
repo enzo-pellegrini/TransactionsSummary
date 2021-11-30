@@ -68,9 +68,6 @@ dependencies {
     implementation 'com.plaid.link:sdk-core:3.6.1'
 
 
-//    // Anychart-Android
-//    implementation 'com.github.AnyChart:AnyChart-Android:1.1.2'
-
     // MPAndroidChart
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 

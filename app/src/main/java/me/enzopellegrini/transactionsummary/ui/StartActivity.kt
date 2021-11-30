@@ -14,6 +14,7 @@ import com.firebase.ui.auth.AuthUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import me.enzopellegrini.transactionsummary.R
+import me.enzopellegrini.transactionsummary.authUIInstance
 import me.enzopellegrini.transactionsummary.databinding.ActivityStartBinding
 
 @AndroidEntryPoint
@@ -56,7 +57,7 @@ class StartActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_logout -> {
-                AuthUI.getInstance().signOut(this)
+                authUIInstance.signOut(this)
                 return true
             }
             else -> {
