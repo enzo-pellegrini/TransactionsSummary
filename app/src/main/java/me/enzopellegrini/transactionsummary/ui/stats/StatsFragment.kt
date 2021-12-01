@@ -1,5 +1,6 @@
 package me.enzopellegrini.transactionsummary.ui.stats
 
+import android.graphics.RenderEffect
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -10,6 +11,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.github.mikephil.charting.components.AxisBase
+import com.github.mikephil.charting.formatter.ValueFormatter
 import dagger.hilt.android.AndroidEntryPoint
 import me.enzopellegrini.transactionsummary.R
 import me.enzopellegrini.transactionsummary.databinding.FragmentStatsBinding
@@ -39,6 +42,8 @@ class StatsFragment : Fragment() {
         binding.categoryChart.let { chart ->
             chart.centerText = "Transactions by category"
             chart.setCenterTextSize(20.0F)
+//            chart.setTransparentCircleAlpha(0) // Not working in dark mode
+//            chart.setTransparentCircleColor(0);
             chart.setDrawCenterText(true)
 
             chart.legend.isEnabled = false
@@ -55,6 +60,31 @@ class StatsFragment : Fragment() {
         }
 
 
+//        binding.accountChart.let { chart ->
+//            viewModel.lineData.observe(viewLifecycleOwner) { data ->
+//                chart.data = data
+//                chart.invalidate()
+//            }
+//        }
+
+
+        binding.accountChart.let { chart ->
+            viewModel.lineData.observe(viewLifecycleOwner) { (data, labels) ->
+                chart.data = data
+                chart.setTouchEnabled(false)
+                val xAxis = chart.xAxis
+                xAxis.granularity = 1F
+                xAxis.valueFormatter = object : ValueFormatter() {
+                    override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+                        return labels[value.toInt()]
+                    }
+                }
+
+                binding.accountChart.invalidate()
+            }
+        }
+
+
         return view
     }
 
@@ -65,6 +95,6 @@ class StatsFragment : Fragment() {
     }
 
     companion object {
-        val TAG = "StatsFragment"
+        const val TAG = "StatsFragment"
     }
 }

@@ -5,9 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.firestore.Query
 import me.enzopellegrini.transactionsummary.authInstance
 import me.enzopellegrini.transactionsummary.firestoreInstance
+import java.util.*
 import javax.inject.Inject
 
 class TransactionRepository @Inject constructor() {
@@ -35,28 +35,12 @@ class TransactionRepository @Inject constructor() {
             _transactions.value = listOf()
         } else {
             val uid = auth.currentUser?.uid!!
-//            fetchTransactions(uid)
-//            // This should work, must show the prof
-//            registration = db.collection("transactions-per-user")
-//                .document(uid)
-//                .collection("transactions")
-//                .addSnapshotListener { snapshot, e ->
-//                    if (e != null) {
-//                        Log.d(AccountsRepository.TAG, "Query failed")
-//                        return@addSnapshotListener
-//                    }
-//
-//                    if (snapshot != null) {
-//                        Log.d(AccountsRepository.TAG, snapshot.toString())
-//                        _transactions.value = snapshot.toObjects(Transaction::class.java)
-//                    }
-//                }
 
             val queryRef = db.collection("items")
                 .whereArrayContains("read_access", uid)
 
             queryRef.get().addOnSuccessListener { query ->
-                val items = query.toObjects(ItemWithTransactions::class.java);
+                val items = query.toObjects(ItemWithTransactions::class.java)
                 var out: MutableList<Transaction> = mutableListOf()
                 for (item in items) {
                     val institution = item.institution_name
@@ -71,7 +55,7 @@ class TransactionRepository @Inject constructor() {
                     Log.d(TAG, "query failed")
                     return@addSnapshotListener
                 }
-                if (snapshot!= null) {
+                if (snapshot != null) {
                     val items = snapshot.toObjects(ItemWithTransactions::class.java);
                     var out: MutableList<Transaction> = mutableListOf()
                     for (item in items) {
@@ -85,16 +69,6 @@ class TransactionRepository @Inject constructor() {
         }
     }
 
-//    private fun fetchTransactions(uid: String) {
-//        db.collection("transactions-per-user")
-//            .document(uid)
-//            .collection("transactions")
-//            .orderBy("date", Query.Direction.DESCENDING)
-//            .get()
-//            .addOnSuccessListener { query ->
-//                _transactions.value = query.toObjects(FirestoreTransaction::class.java)
-//            }
-//    }
 
     val categorySummary: LiveData<Map<String, SegmentSummary>> by lazy {
         Transformations.map(transactions) { all ->
@@ -104,10 +78,7 @@ class TransactionRepository @Inject constructor() {
                 .map {
                     Pair(
                         it.key,
-                        SegmentSummary(
-                            it.value.count(),
-                            it.value.sumOf { it.amount }
-                        )
+                        SegmentSummary(it.value)
                     )
                 }
                 .toMap()
@@ -115,15 +86,66 @@ class TransactionRepository @Inject constructor() {
     }
 
 
+    val summaryPerAccountPerDay: LiveData<Map<String, Map<Date, SegmentSummary>>> by lazy {
+        Transformations.map(transactions) { all ->
+            all
+                .filter { it.amount >= 0 }
+                .groupBy { it.institution }
+                .map { entry ->
+                    Pair(
+                        entry.key,
+                        entry.value
+                            .groupBy {
+                                it.date.withoutTime()
+                            }
+                            .map { Pair(it.key, SegmentSummary(it.value)) }
+                            .toMap()
+                    )
+                }
+                .toMap()
+        }
+    }
+
+//    val summaryByDayPerAccount: LiveData<List<Pair<Date, Map<String, SegmentSummary>>>> by lazy {
+//        Transformations.map(transactions) { all ->
+//            all
+//                .groupBy { it.date.withoutTime() }
+//                .map { entry -> Pair(
+//                    entry.key,
+//                    entry.value
+//                        .groupBy { it.institution }
+//                        .map { Pair(
+//                            it.key,
+//                            SegmentSummary(it.value)
+//                        )}
+//                        .toMap()
+//                ) }
+//                .sortedBy { it.first }
+//        }
+//    }
+
+
     companion object {
         val TAG = "TransactionRepository"
     }
 }
 
+
+// Why not be messy
+fun Date.withoutTime(): Date {
+    val c = Calendar.getInstance(TimeZone.getDefault())
+    c.time = this
+    c.set(c.get(Calendar.YEAR) + 1900, c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), 0, 0)
+    return c.time
+}
+
+
 data class SegmentSummary(
     val count: Int,
     val sum: Double
-)
+) {
+    constructor(l: List<Transaction>) : this(l.count(), l.sumOf { it.amount })
+}
 
 class Transaction(val from: FirestoreTransaction, val institution: String) {
     val name = from.name
@@ -136,4 +158,12 @@ class Transaction(val from: FirestoreTransaction, val institution: String) {
 data class ItemWithTransactions(
     val institution_name: String = "",
     val transactions: List<FirestoreTransaction> = listOf()
+)
+
+data class FirestoreTransaction(
+    val name: String = "",
+    val transaction_id: String = "", // Used to hide the transaction
+    val amount: Double = 0.0,
+    val category: String = "default",  // In firestore should be the category name
+    val date: Date = Date(),
 )

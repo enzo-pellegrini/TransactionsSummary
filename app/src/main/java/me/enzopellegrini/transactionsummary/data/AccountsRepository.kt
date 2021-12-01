@@ -6,8 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import com.plaid.link.result.*
 import me.enzopellegrini.transactionsummary.authInstance
 import me.enzopellegrini.transactionsummary.firestoreInstance
@@ -23,17 +21,6 @@ class AccountsRepository @Inject constructor() {
 
     private var registration: ListenerRegistration? = null
 
-//    private val db = Firebase.firestore
-//    private val functions: FirebaseFunctions by lazy {
-//        val i = Firebase.functions
-//        i.useEmulator("10.0.2.2", 5001)
-//        i
-//    }
-//    private val auth: FirebaseAuth by lazy {
-//        val i = Firebase.auth
-//        i.useEmulator("10.0.2.2", 9099)
-//        i
-//    }
 
     private val functions = functionsInstance
     private val auth = authInstance
@@ -62,11 +49,14 @@ class AccountsRepository @Inject constructor() {
 
     fun registerLinkResult(result: LinkSuccess): Task<Any> =
         functions.getHttpsCallable("savePublicToken")
-            .call(hashMapOf(
-                "public_token" to result.publicToken,
-                "institution_name" to result.metadata.institution?.name,
-                "account_ids" to result.metadata.accounts.map { it.id },
-            ))
+            .call(
+                hashMapOf(
+                    "public_token" to result.publicToken,
+                    "institution_id" to result.metadata.institution?.id,
+                    "institution_name" to result.metadata.institution?.name,
+                    "account_ids" to result.metadata.accounts.map { it.id },
+                )
+            )
             .continueWith { task ->
                 task.result?.data
             }
@@ -91,68 +81,27 @@ class AccountsRepository @Inject constructor() {
                     _accounts.value = query.toObjects(Item::class.java)
                 }
             queryRef.addSnapshotListener { snapshot, e ->
-                    if (e != null) {
-                        Log.d(TAG, "Query failed")
-                        return@addSnapshotListener
-                    }
-
-                    if (snapshot != null) {
-                        _accounts.value = snapshot.toObjects(Item::class.java)
-                    }
+                if (e != null) {
+                    Log.d(TAG, "Query failed")
+                    return@addSnapshotListener
                 }
 
-
-//            fetchAccounts(uid)
-//            // This should work, must show the prof
-//            registration = db.collection("items-per-user")
-//                .document(uid)
-//                .collection("items")
-//                .addSnapshotListener { snapshot, e ->
-//                    if (e != null) {
-//                        Log.d(TAG, "Query failed")
-//                        return@addSnapshotListener
-//                    }
-//
-//                    if (snapshot != null) {
-//                        Log.d(TAG, snapshot.toString())
-//                        _accounts.value = snapshot.toObjects(Item::class.java)
-//                    }
-//                }
+                if (snapshot != null) {
+                    _accounts.value = snapshot.toObjects(Item::class.java)
+                }
+            }
         }
     }
 
-//    private fun fetchAccounts(uid: String) {
-//        db.collection("items-per-user")
-//            .document(uid)
-//            .collection("items")
-//            .get()
-//            .addOnCompleteListener { task ->
-//                task.addOnSuccessListener { query ->
-//                    _accounts.value = query.toObjects(Item::class.java)
-//                }
-//            }
-//    }
-
     fun deleteItem(itemId: String) {
-//        // Does delete on firebase
-//        val ref = db.collection("items-per-user")
-//            .document(auth.currentUser?.uid!!)
-//            .collection("items")
-//            .document(itemId)
-//        ref.delete()
-//            .addOnSuccessListener {  }
-//            .addOnFailureListener {  }
-
         db.collection("items")
             .document(itemId)
-            .update(mapOf(
-                Pair("read_access", FieldValue.arrayRemove(auth.currentUser?.uid!!))
-            ))
+            .update(
+                mapOf(
+                    Pair("read_access", FieldValue.arrayRemove(auth.currentUser?.uid!!))
+                )
+            )
     }
-
-//    init {
-//        db.collection("items-per-user/${}")
-//    }
 
 
     companion object {
