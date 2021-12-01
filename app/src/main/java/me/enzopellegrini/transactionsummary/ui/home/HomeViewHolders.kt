@@ -1,6 +1,9 @@
 package me.enzopellegrini.transactionsummary.ui.home
 
 import android.view.View
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -13,38 +16,44 @@ class TransactionViewHolder(view: View) : HomeViewHolder(view) {
     val amountView: TextView = view.findViewById(R.id.transaction_amount)
 }
 
-enum class TotalState {
-    day,
-    week,
-    month
-}
 
-class TotalViewHolder(view: View, val stateFun: (TotalState) -> Unit) : HomeViewHolder(view) {
-    var state = TotalState.day
-    val leftArrow: ImageButton = view.findViewById(R.id.left_arrow)
-    val rightArrow: ImageButton = view.findViewById(R.id.right_arrow)
+class TotalViewHolder(view: View, val statusInterface: TotalInterface) : HomeViewHolder(view) {
+    val leftButton: ImageButton = view.findViewById(R.id.left_arrow)
+    val rightButton: ImageButton = view.findViewById(R.id.right_arrow)
+    val totalText: TextView = view.findViewById(R.id.total_amount)
 
     init {
-        leftArrow.setOnClickListener {
-            state = when (state) {
-                TotalState.day -> TotalState.month
-                TotalState.week -> TotalState.day
-                TotalState.month -> TotalState.week
-            }
-            updateData()
+        leftButton.setOnClickListener {
+            statusInterface.leftAction()
         }
-        rightArrow.setOnClickListener {
-            state = when (state) {
-                TotalState.day -> TotalState.week
-                TotalState.week -> TotalState.month
-                TotalState.month -> TotalState.day
-            }
-            updateData()
+
+        rightButton.setOnClickListener {
+            statusInterface.rightAction()
         }
-        updateData()
+
+        notifyState(statusInterface.state)
     }
 
-    private fun updateData() {
-        stateFun(state)
+    fun notify(data: Pair<Double, TotalState>) {
+        notifyState(data.second)
+        notifyTotal(data.first)
+    }
+
+    private fun notifyTotal(amount: Double) {
+        totalText.text = "${amount}$"
+    }
+
+    fun notifyState(newState: TotalState) {
+        if (newState == TotalState.Day)
+            leftButton.visibility = INVISIBLE
+        else
+            leftButton.visibility = VISIBLE
+
+
+        if (newState == TotalState.Month)
+            rightButton.visibility = INVISIBLE
+        else
+            rightButton.visibility = VISIBLE
+
     }
 }

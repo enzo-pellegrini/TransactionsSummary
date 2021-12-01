@@ -13,6 +13,7 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -48,19 +49,32 @@ class HomeFragment : Fragment() {
         }
 
 
+        var oldObserver: ((TotalState) -> Unit)? = null
         commonViewModel.hasAccounts.observe(viewLifecycleOwner) {
             if (it) {
                 binding.goToAccounts.visibility = INVISIBLE
                 binding.transactionsList.let { rv ->
                     viewModel.transactions.observe(viewLifecycleOwner) { all ->
-                        rv.adapter = TransactionsAdapter(all!!, {
+                        val adapter = TransactionsAdapter(all, {
                             val action = HomeFragmentDirections
                                 .actionNavigationHomeToTransactionPage(it)
                             findNavController().navigate(action)
-                        }, {
-//                            Snackbar.make(binding.root, it.toString(), Snackbar.LENGTH_SHORT).show()
-                        })
+                        },
+                        totalInterface = viewModel.totalInterface)
+
+                        rv.adapter = adapter
                         rv.layoutManager = LinearLayoutManager(context)
+
+                        oldObserver?.let { viewModel.totalState.removeObserver(it) }
+                        oldObserver = {
+                            adapter.notifyTotalStateChange( Pair(
+                                viewModel.totalValue.value?:0.0,
+                                it
+                            ))
+                        }
+                        oldObserver?.let {
+                            viewModel.totalState.observe(viewLifecycleOwner, it)
+                        }
                     }
                 }
             } else {

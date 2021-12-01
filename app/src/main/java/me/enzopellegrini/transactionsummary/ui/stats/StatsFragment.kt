@@ -76,7 +76,7 @@ class StatsFragment : Fragment() {
                 xAxis.granularity = 1F
                 xAxis.valueFormatter = object : ValueFormatter() {
                     override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-                        return labels[value.toInt()]
+                        return labels[value.toInt()%labels.size]
                     }
                 }
 

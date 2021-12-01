@@ -4,16 +4,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import me.enzopellegrini.transactionsummary.R
-import me.enzopellegrini.transactionsummary.data.FirestoreTransaction
 import me.enzopellegrini.transactionsummary.data.Transaction
 
 class TransactionsAdapter(
     val all: List<Transaction>,
     val onClikListener: (Int) -> Unit,
-    val stateFun: (TotalState) -> Unit
+    val totalInterface: TotalInterface
 ) : RecyclerView.Adapter<HomeViewHolder>() {
-
-
+    var totalViewHolder: TotalViewHolder? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeViewHolder {
         if (viewType == 2) {
@@ -25,9 +23,13 @@ class TransactionsAdapter(
             val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.total_item, parent, false)
 
-            return TotalViewHolder(view, stateFun)
+            totalViewHolder = TotalViewHolder(view, totalInterface)
+            return totalViewHolder as HomeViewHolder // Weird
         }
     }
+
+    fun notifyTotalStateChange(data: Pair<Double, TotalState>) =
+        totalViewHolder?.let { it.notify(data) }
 
     override fun onBindViewHolder(holder: HomeViewHolder, position: Int) {
         when (holder) {

@@ -4,9 +4,11 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
 import com.google.firebase.firestore.ListenerRegistration
 import me.enzopellegrini.transactionsummary.authInstance
 import me.enzopellegrini.transactionsummary.firestoreInstance
+import me.enzopellegrini.transactionsummary.ui.home.TotalState
 import java.util.*
 import javax.inject.Inject
 
@@ -106,23 +108,11 @@ class TransactionRepository @Inject constructor() {
         }
     }
 
-//    val summaryByDayPerAccount: LiveData<List<Pair<Date, Map<String, SegmentSummary>>>> by lazy {
-//        Transformations.map(transactions) { all ->
-//            all
-//                .groupBy { it.date.withoutTime() }
-//                .map { entry -> Pair(
-//                    entry.key,
-//                    entry.value
-//                        .groupBy { it.institution }
-//                        .map { Pair(
-//                            it.key,
-//                            SegmentSummary(it.value)
-//                        )}
-//                        .toMap()
-//                ) }
-//                .sortedBy { it.first }
-//        }
-//    }
+
+    fun amountSince(period: TotalState): LiveData<Double> =
+        transactions.map {
+            it.sumOf { it.amount }
+        }
 
 
     companion object {
