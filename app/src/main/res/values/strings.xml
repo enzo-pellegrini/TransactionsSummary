@@ -19,4 +19,6 @@
     <string name="category_chart">Cageory chart</string>
     <string name="category_pie_title">Spending by category</string>
     <string name="left_arrow">Left Arrow</string>
+    <string name="share_account">Share account</string>
+    <string name="filter_transactions">Filter transactions</string>
 </resources>

@@ -10,6 +10,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.plaid.link.OpenPlaidLink
 import com.plaid.link.PlaidActivityResultContract
@@ -41,6 +42,10 @@ class AccountsFragment : Fragment() {
         binding.addAccountButton.setOnClickListener {
             addAccount()
         }
+
+//        MaterialAlertDialogBuilder(context)
+//            .setTitle(resources.getString(R.string.share_account))
+//
 
         // RecyclerView
         viewModel.accounts.observe(viewLifecycleOwner) {
