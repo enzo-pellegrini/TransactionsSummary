@@ -32,6 +32,7 @@ class StatsViewModel @Inject constructor(
         // Weird api
         val set = PieDataSet(summary
             .toList()
+            .sortedByDescending { it.second.sum } // It looks better
             .map {
                 PieEntry (
                     it.second.sum.toFloat(),
@@ -39,8 +40,9 @@ class StatsViewModel @Inject constructor(
                 )
             },
             "Transactions by category")
-        set.colors = ColorTemplate.JOYFUL_COLORS.toList()
+        set.colors = ColorTemplate.MATERIAL_COLORS.toList()
         set.sliceSpace = 2.0F
+        set.setDrawValues(false)
 
         PieData(set)
     }
@@ -71,10 +73,10 @@ class StatsViewModel @Inject constructor(
                 it.second.map { pair -> Entry (
                     pair.first.toFloat(),
                     pair.second.toFloat()
-                )},
+                ) },
                 it.first
             )
-            out.color = ColorTemplate.COLORFUL_COLORS[index%ColorTemplate.COLORFUL_COLORS.size]
+            out.color = ColorTemplate.MATERIAL_COLORS[index%ColorTemplate.COLORFUL_COLORS.size]
 
             out
         }

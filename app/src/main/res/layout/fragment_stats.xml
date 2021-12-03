@@ -4,10 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.stats.StatsFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
@@ -15,20 +17,16 @@
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/category_chart"
             android:layout_width="match_parent"
-            android:layout_height="450dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="400dp"
+            android:layout_margin="8dp" />
 
 
         <com.github.mikephil.charting.charts.LineChart
+            android:layout_marginTop="20dp"
             android:id="@+id/account_chart"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/category_chart" />
+            android:layout_height="400dp" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
 </ScrollView>

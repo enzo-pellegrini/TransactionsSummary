@@ -12,6 +12,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.github.mikephil.charting.components.AxisBase
+import com.github.mikephil.charting.components.YAxis
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.formatter.ValueFormatter
 import dagger.hilt.android.AndroidEntryPoint
 import me.enzopellegrini.transactionsummary.R
@@ -39,55 +42,71 @@ class StatsFragment : Fragment() {
         }
 
 
-        binding.categoryChart.let { chart ->
-            chart.centerText = "Transactions by category"
-            chart.setCenterTextSize(20.0F)
-//            chart.setTransparentCircleAlpha(0) // Not working in dark mode
-//            chart.setTransparentCircleColor(0);
-            chart.setDrawCenterText(true)
-
-            chart.legend.isEnabled = false
-            chart.description.isEnabled = false
-
-            chart.setTouchEnabled(false)
-            chart.isRotationEnabled = false
-            chart.isHighlightPerTapEnabled = false
-
-            viewModel.pieData.observe(viewLifecycleOwner) { data ->
-                chart.data = data
-                chart.invalidate()
-            }
+        viewModel.pieData.observe(viewLifecycleOwner) { data ->
+            setupCategoryChart(data)
         }
 
 
-//        binding.accountChart.let { chart ->
-//            viewModel.lineData.observe(viewLifecycleOwner) { data ->
-//                chart.data = data
-//                chart.invalidate()
-//            }
-//        }
-
-
-        binding.accountChart.let { chart ->
-            viewModel.lineData.observe(viewLifecycleOwner) { (data, labels) ->
-                chart.data = data
-                chart.setTouchEnabled(false)
-                val xAxis = chart.xAxis
-                xAxis.granularity = 1F
-                xAxis.valueFormatter = object : ValueFormatter() {
-                    override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-                        return labels[value.toInt()%labels.size]
-                    }
-                }
-
-                binding.accountChart.invalidate()
-            }
+        viewModel.lineData.observe(viewLifecycleOwner) { (data, labels) ->
+            setupAccountChart(data, labels)
         }
 
 
         return view
     }
 
+    private fun setupCategoryChart(data: PieData) {
+        binding.categoryChart.let { chart ->
+
+            chart.centerText = "Transactions by category"
+            chart.setCenterTextSize(20.0F)
+    //            chart.setTransparentCircleAlpha(0) // Not working in dark mode
+    //            chart.setTransparentCircleColor(0);
+            chart.setDrawCenterText(true)
+            chart.setDrawEntryLabels(false)
+            chart.setNoDataText("This chart has no data")
+
+            chart.legend.isEnabled = true
+            chart.description.isEnabled = false
+
+            chart.setTouchEnabled(false)
+            chart.isRotationEnabled = false
+            chart.isHighlightPerTapEnabled = false
+
+            val legend = chart.legend
+            legend.isWordWrapEnabled = true
+
+
+            chart.data = data
+            chart.invalidate()
+        }
+    }
+
+
+    private fun setupAccountChart(data: LineData, labels: List<String>) {
+        binding.accountChart.let { chart ->
+
+            chart.data = data
+            chart.setTouchEnabled(false)
+            val xAxis = chart.xAxis
+            xAxis.granularity = 1F
+            xAxis.valueFormatter = object : ValueFormatter() {
+                override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+                    return labels[value.toInt() % labels.size]
+                }
+            }
+            chart.setDrawGridBackground(false)
+            xAxis.setDrawGridLines(false)
+            chart.axisLeft.setDrawGridLines(false)
+            chart.axisLeft.setDrawAxisLine(false)
+
+            chart.description.isEnabled = false
+            chart.setDrawGridBackground(false)
+
+
+            binding.accountChart.invalidate()
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
