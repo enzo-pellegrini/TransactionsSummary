@@ -48,35 +48,21 @@ class HomeFragment : Fragment() {
         }
 
 
-        var oldObserver: ((TotalState) -> Unit)? = null
         commonViewModel.hasAccounts.observe(viewLifecycleOwner) {
             if (it) {
                 binding.goToAccounts.visibility = INVISIBLE
-                binding.transactionsList.let { rv ->
-                    viewModel.transactions.observe(viewLifecycleOwner) { all ->
-                        val adapter = TransactionsAdapter(all, {
-                            val action = HomeFragmentDirections
-                                .actionNavigationHomeToTransactionPage(it)
-                            findNavController().navigate(action)
-                        },
-                        totalInterface = viewModel.totalInterface)
-
-                        rv.adapter = adapter
-                        rv.layoutManager = LinearLayoutManager(context)
-
-                        oldObserver?.let { viewModel.totalState.removeObserver(it) }
-                        oldObserver = {
-                            adapter.notifyTotalStateChange( Pair(
-                                viewModel.totalValue.value?:0.0,
-                                it
-                            ))
-                        }
-                        oldObserver?.let {
-                            viewModel.totalState.observe(viewLifecycleOwner, it)
-                        }
+                viewModel.transactions.observe(viewLifecycleOwner) { all ->
+                    val adapter = TransactionsAdapter(all) {
+                        val action = HomeFragmentDirections
+                            .actionNavigationHomeToTransactionPage(it)
+                        findNavController().navigate(action)
                     }
+
+                    binding.transactionsList.adapter = adapter
+                    binding.transactionsList.layoutManager = LinearLayoutManager(context)
                 }
             } else {
+                binding.transactionsList.visibility = INVISIBLE
                 binding.goToAccounts.visibility = VISIBLE
             }
         }
@@ -86,12 +72,6 @@ class HomeFragment : Fragment() {
         }
 
 
-//        val chip = Chip(context)
-//        chip.text = "This is some text"
-//        chip.isChecked = true
-//        chip.id = generateViewId()
-//
-//        binding.filterChipGroup.addView(chip)
         viewModel.categoriesSelected.observe(viewLifecycleOwner) {
             binding.filterChipGroup.removeAllViews()
 

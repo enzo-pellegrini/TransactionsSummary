@@ -8,7 +8,6 @@ import androidx.lifecycle.map
 import com.google.firebase.firestore.ListenerRegistration
 import me.enzopellegrini.transactionsummary.authInstance
 import me.enzopellegrini.transactionsummary.firestoreInstance
-import me.enzopellegrini.transactionsummary.ui.home.TotalState
 import java.util.*
 import javax.inject.Inject
 
@@ -108,11 +107,6 @@ class TransactionRepository @Inject constructor() {
         }
     }
 
-
-    fun amountSince(period: TotalState): LiveData<Double> =
-        transactions.map {
-            it.sumOf { it.amount }
-        }
 
 
     companion object {

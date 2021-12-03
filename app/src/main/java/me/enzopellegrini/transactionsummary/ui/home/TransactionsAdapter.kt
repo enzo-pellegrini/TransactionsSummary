@@ -1,56 +1,38 @@
 package me.enzopellegrini.transactionsummary.ui.home
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import me.enzopellegrini.transactionsummary.R
 import me.enzopellegrini.transactionsummary.data.Transaction
 
 class TransactionsAdapter(
-    val all: List<Transaction>,
-    val onClikListener: (Int) -> Unit,
-    val totalInterface: TotalInterface
-) : RecyclerView.Adapter<HomeViewHolder>() {
-    var totalViewHolder: TotalViewHolder? = null
+    private val all: List<Transaction>,
+    val onClickListener: (Int) -> Unit,
+) : RecyclerView.Adapter<TransactionsAdapter.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeViewHolder {
-        if (viewType == 2) {
-            val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.transaction_item, parent, false)
+    class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+        val nameView: TextView = view.findViewById(R.id.transaction_name)
+        val amountView: TextView = view.findViewById(R.id.transaction_amount)
+    }
 
-            return TransactionViewHolder(view)
-        } else {
-            val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.total_item, parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.transaction_item, parent, false)
 
-            totalViewHolder = TotalViewHolder(view, totalInterface)
-            return totalViewHolder as HomeViewHolder // Weird
+        return ViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.nameView.text = all[position].name
+        holder.amountView.text = "${all[position].amount}$"
+
+        holder.view.setOnClickListener {
+            onClickListener(position)
         }
     }
 
-    fun notifyTotalStateChange(data: Pair<Double, TotalState>) =
-        totalViewHolder?.let { it.notify(data) }
-
-    override fun onBindViewHolder(holder: HomeViewHolder, position: Int) {
-        when (holder) {
-            is TransactionViewHolder -> {
-                holder.nameView.text = all[position - 1].name
-                holder.amountView.text = "${all[position - 1].amount}$"
-
-                holder.view.setOnClickListener {
-                    onClikListener(position - 1)
-                }
-            }
-            else -> {
-
-            }
-        }
-    }
-
-    override fun getItemCount() =
-        all.size + 1
-
-
-    override fun getItemViewType(position: Int) =
-        if (position == 0) 1 else 2
+    override fun getItemCount() = all.size
 }
