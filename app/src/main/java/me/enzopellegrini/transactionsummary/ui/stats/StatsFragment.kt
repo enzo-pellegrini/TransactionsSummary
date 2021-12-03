@@ -21,14 +21,12 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import dagger.hilt.android.AndroidEntryPoint
 import me.enzopellegrini.transactionsummary.R
 import me.enzopellegrini.transactionsummary.databinding.FragmentStatsBinding
-import me.enzopellegrini.transactionsummary.ui.CommonViewModel
 
 @AndroidEntryPoint
 class StatsFragment : Fragment() {
     private var _binding: FragmentStatsBinding? = null
     private val binding get() = _binding!!
     private val viewModel: StatsViewModel by viewModels()
-    private val activityViewModel: CommonViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,14 +36,14 @@ class StatsFragment : Fragment() {
         val view = binding.root
 
 
-        activityViewModel.isLoggedIn.observe(viewLifecycleOwner) { loggedIn ->
+        viewModel.isLoggedIn.observe(viewLifecycleOwner) { loggedIn ->
             if (!loggedIn) {
                 findNavController().navigate(R.id.firebaseLogin)
             }
         }
 
 
-        activityViewModel.hasAccounts.observe(viewLifecycleOwner) {
+        viewModel.hasAccounts.observe(viewLifecycleOwner) {
             if (it) {
                 binding.goRightText.visibility = INVISIBLE
                 binding.goToAccounts.visibility = INVISIBLE

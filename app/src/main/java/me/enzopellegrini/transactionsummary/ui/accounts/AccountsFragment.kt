@@ -6,11 +6,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.plaid.link.OpenPlaidLink
 import com.plaid.link.PlaidActivityResultContract
@@ -20,7 +18,6 @@ import com.plaid.link.result.LinkSuccess
 import dagger.hilt.android.AndroidEntryPoint
 import me.enzopellegrini.transactionsummary.R
 import me.enzopellegrini.transactionsummary.databinding.FragmentAccountsBinding
-import me.enzopellegrini.transactionsummary.ui.CommonViewModel
 
 
 @AndroidEntryPoint
@@ -28,8 +25,6 @@ class AccountsFragment : Fragment() {
     private var _binding: FragmentAccountsBinding? = null
     private val binding get() = _binding!!
     private val viewModel: AccountsFragmentViewModel by viewModels()
-
-    private val loginViewModel: CommonViewModel by activityViewModels()
 
 
     override fun onCreateView(
@@ -43,13 +38,9 @@ class AccountsFragment : Fragment() {
             addAccount()
         }
 
-//        MaterialAlertDialogBuilder(context)
-//            .setTitle(resources.getString(R.string.share_account))
-//
 
         // RecyclerView
         viewModel.accounts.observe(viewLifecycleOwner) {
-//            Log.i(TAG, "Accounts changed, now it's $it")
             binding.accountsList.layoutManager = LinearLayoutManager(context)
             binding.accountsList.adapter =
                 AccountsAdapter(it) {
@@ -59,7 +50,7 @@ class AccountsFragment : Fragment() {
 
 
         // Navigate to the login fragment if not logged in
-        loginViewModel.isLoggedIn.observe(viewLifecycleOwner) { isLoggedIn ->
+        viewModel.isLoggedIn.observe(viewLifecycleOwner) { isLoggedIn ->
             if (!isLoggedIn) {
                 Log.d("HomeFragment", "Navigating to login fragment")
                 findNavController().navigate(R.id.firebaseLogin)

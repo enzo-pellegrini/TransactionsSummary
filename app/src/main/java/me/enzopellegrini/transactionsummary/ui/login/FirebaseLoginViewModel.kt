@@ -11,7 +11,5 @@ class FirebaseLoginViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
-    val isLoggedIn = Transformations.map(userRepository.currentUser) {
-        it != null
-    }
+    val isLoggedIn = userRepository.isLoggedIn
 }

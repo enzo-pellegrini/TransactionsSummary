@@ -3,15 +3,21 @@ package me.enzopellegrini.transactionsummary.ui.home
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import me.enzopellegrini.transactionsummary.data.AccountsRepository
 import me.enzopellegrini.transactionsummary.data.Transaction
 import me.enzopellegrini.transactionsummary.data.TransactionRepository
+import me.enzopellegrini.transactionsummary.data.UserRepository
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val transactionsRepository: TransactionRepository
+    private val transactionsRepository: TransactionRepository,
+    accountsRepository: AccountsRepository,
+    userRepository: UserRepository
 ) : ViewModel() {
-//    val transactions = transactionsRepository.transactions
+    val isLoggedIn = userRepository.isLoggedIn
+    val hasAccounts = accountsRepository.hasAccounts
+
     val transactions = transactionsRepository.transactions.switchMap {
         filterTransactions(it)
     }

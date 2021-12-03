@@ -4,19 +4,26 @@ import android.graphics.Color
 import android.util.Log
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.utils.ColorTemplate
 import dagger.hilt.android.lifecycle.HiltViewModel
+import me.enzopellegrini.transactionsummary.data.AccountsRepository
 import me.enzopellegrini.transactionsummary.data.SegmentSummary
 import me.enzopellegrini.transactionsummary.data.TransactionRepository
+import me.enzopellegrini.transactionsummary.data.UserRepository
 import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class StatsViewModel @Inject constructor(
-    private val transactionRepository: TransactionRepository
+    private val transactionRepository: TransactionRepository,
+    accountsRepository: AccountsRepository,
+    userRepository: UserRepository
 ): ViewModel() {
+    val isLoggedIn = userRepository.currentUser.map { it != null }
+    val hasAccounts = accountsRepository.hasAccounts
 
 
     val pieData = Transformations.map(transactionRepository.categorySummary) { summary ->
@@ -39,10 +46,6 @@ class StatsViewModel @Inject constructor(
     }
 
 
-//    val lineData = Transformations.map(transactionRepository.summaryByDayPerAccount) { summary ->
-//        val dates: List<Date> = summary.map { it.first }
-//
-//    }
 
     val lineData = Transformations.map(transactionRepository.summaryPerAccountPerDay) { summary ->
         // Get all the dates present for all the accounts

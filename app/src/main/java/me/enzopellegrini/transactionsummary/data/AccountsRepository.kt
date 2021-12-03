@@ -3,6 +3,7 @@ package me.enzopellegrini.transactionsummary.data
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.map
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ListenerRegistration
@@ -18,6 +19,7 @@ import javax.inject.Singleton
 class AccountsRepository @Inject constructor() {
     private val _accounts = MutableLiveData<List<Item>>()
     val accounts: LiveData<List<Item>> = _accounts
+    val hasAccounts = accounts.map { it.isNotEmpty() }
 
     private var registration: ListenerRegistration? = null
 

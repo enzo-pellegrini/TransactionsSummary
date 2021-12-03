@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.navigation.fragment.findNavController
@@ -17,12 +16,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import me.enzopellegrini.transactionsummary.R
 import me.enzopellegrini.transactionsummary.data.Transaction
 import me.enzopellegrini.transactionsummary.databinding.FragmentHomeBinding
-import me.enzopellegrini.transactionsummary.ui.CommonViewModel
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by viewModels()
-    private val commonViewModel: CommonViewModel by activityViewModels()
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
@@ -34,11 +31,11 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         // Navigate to the login fragment if not logged in
-        commonViewModel.isLoggedIn.observe(viewLifecycleOwner) {
+        viewModel.isLoggedIn.observe(viewLifecycleOwner) {
             if (!it) navigateToLogin()
         }
 
-        commonViewModel.hasAccounts.observe(viewLifecycleOwner) { hasAccounts ->
+        viewModel.hasAccounts.observe(viewLifecycleOwner) { hasAccounts ->
             if (hasAccounts) {
                 binding.goToAccounts.visibility = INVISIBLE
                 binding.goRightText.visibility = INVISIBLE
