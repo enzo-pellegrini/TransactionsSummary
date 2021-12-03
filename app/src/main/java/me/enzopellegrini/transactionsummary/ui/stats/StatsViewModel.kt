@@ -1,16 +1,12 @@
 package me.enzopellegrini.transactionsummary.ui.stats
 
-import android.graphics.Color
-import android.util.Log
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
-import androidx.lifecycle.viewModelScope
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.utils.ColorTemplate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import me.enzopellegrini.transactionsummary.data.AccountsRepository
-import me.enzopellegrini.transactionsummary.data.SegmentSummary
 import me.enzopellegrini.transactionsummary.data.TransactionRepository
 import me.enzopellegrini.transactionsummary.data.UserRepository
 import java.util.*
@@ -18,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class StatsViewModel @Inject constructor(
-    private val transactionRepository: TransactionRepository,
+    transactionRepository: TransactionRepository,
     accountsRepository: AccountsRepository,
     userRepository: UserRepository
 ): ViewModel() {

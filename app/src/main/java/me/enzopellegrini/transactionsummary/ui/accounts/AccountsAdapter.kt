@@ -6,11 +6,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.card.MaterialCardView
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import me.enzopellegrini.transactionsummary.R
 import me.enzopellegrini.transactionsummary.data.Item
-import kotlin.coroutines.coroutineContext
 
 
 class AccountsAdapter(val data: List<Item>, val onClick: (String)->Unit) : RecyclerView.Adapter<AccountsAdapter.ViewHolder>() {
@@ -41,6 +38,6 @@ class AccountsAdapter(val data: List<Item>, val onClick: (String)->Unit) : Recyc
     }
 
     override fun getItemCount(): Int {
-        return data.size;
+        return data.size
     }
 }

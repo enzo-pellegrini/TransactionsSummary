@@ -20,7 +20,6 @@
             android:id="@+id/account_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/default_account_name"
             android:textSize="20sp" />
 
         <com.google.android.material.button.MaterialButton
@@ -30,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/account_name"
             android:layout_alignEnd="@id/account_name"
-            android:text="DELETE" />
+            android:text="@string/delete" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/share_account"
@@ -44,7 +43,7 @@
             android:layout_marginEnd="4dp"
             android:layout_marginBottom="1dp"
             android:layout_toStartOf="@+id/delete_account"
-            android:text="share" />
+            android:text="@string/share" />
 
     </RelativeLayout>
 

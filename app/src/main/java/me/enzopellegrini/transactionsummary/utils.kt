@@ -55,7 +55,7 @@ class SingleLiveEvent<T> : MutableLiveData<T>() {
     }
 }
 
-
+// Simple Double extension method built by me
 fun Double.toDollars(): String {
     val numberFormat = NumberFormat.getCurrencyInstance(Locale.US)
     numberFormat.maximumFractionDigits = 2

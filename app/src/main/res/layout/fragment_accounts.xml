@@ -28,10 +28,11 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:contentDescription="@string/add_account"
             android:id="@+id/add_account_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right|bottom"
+            android:layout_gravity="end|bottom"
             android:layout_margin="16dp"
             app:srcCompat="@drawable/ic_plus" />
 

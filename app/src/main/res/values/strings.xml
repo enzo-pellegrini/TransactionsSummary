@@ -20,4 +20,8 @@
     <string name="filter_transactions">Filter transactions</string>
     <string name="go_right">Go right</string>
     <string name="need_account">Add an account first</string>
+    <string name="delete">DELETE</string>
+    <string name="share">share</string>
+    <string name="add_account">Add account</string>
+    <string name="logout">Logout</string>
 </resources>

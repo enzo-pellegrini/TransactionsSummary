@@ -1,21 +1,17 @@
 package me.enzopellegrini.transactionsummary.ui.accounts
 
 import androidx.lifecycle.*
-import com.plaid.internal.core.protos.link.workflow.primitives.SdkResult
-import com.plaid.link.result.LinkResult
 import com.plaid.link.result.LinkSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import me.enzopellegrini.transactionsummary.SingleLiveEvent
 import me.enzopellegrini.transactionsummary.data.AccountsRepository
-import me.enzopellegrini.transactionsummary.data.Item
 import me.enzopellegrini.transactionsummary.data.UserRepository
 import javax.inject.Inject
 
 @HiltViewModel
 class AccountsFragmentViewModel @Inject constructor(
     private val accountsRepository: AccountsRepository,
-    private val userRepository: UserRepository
+    userRepository: UserRepository
 ) : ViewModel() {
     val isLoggedIn = userRepository.isLoggedIn
 

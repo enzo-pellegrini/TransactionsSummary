@@ -36,7 +36,7 @@ class FirebaseLogin : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         Log.d("FirebaseLoginFragment", "In the onCreate of login fragment")
         _binding = FirebaseLoginFragmentBinding.inflate(inflater, container, false)
         val view = binding.root

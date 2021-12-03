@@ -30,7 +30,7 @@ class AccountsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentAccountsBinding.inflate(inflater, container, false)
         val view = binding.root
 
@@ -40,10 +40,10 @@ class AccountsFragment : Fragment() {
 
 
         // RecyclerView
-        viewModel.accounts.observe(viewLifecycleOwner) {
+        viewModel.accounts.observe(viewLifecycleOwner) { items ->
             binding.accountsList.layoutManager = LinearLayoutManager(context)
             binding.accountsList.adapter =
-                AccountsAdapter(it) {
+                AccountsAdapter(items) {
                     viewModel.deleteItem(it)
                 }
         }

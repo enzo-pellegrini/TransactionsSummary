@@ -1,6 +1,5 @@
 package me.enzopellegrini.transactionsummary.ui.home
 
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import me.enzopellegrini.transactionsummary.data.AccountsRepository
@@ -11,7 +10,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val transactionsRepository: TransactionRepository,
+    transactionsRepository: TransactionRepository,
     accountsRepository: AccountsRepository,
     userRepository: UserRepository
 ) : ViewModel() {
@@ -37,8 +36,8 @@ class HomeViewModel @Inject constructor(
 
 
     val categoriesSelected: LiveData<Map<String, LiveData<Boolean>>> =
-        transactionsRepository.transactions.map {
-            it
+        transactionsRepository.transactions.map { categories ->
+            categories
                 .map { it.category }.distinct()
                 .map {
                     Pair(it, isCategorySelected(it))
