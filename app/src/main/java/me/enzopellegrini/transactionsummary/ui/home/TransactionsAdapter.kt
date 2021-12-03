@@ -10,7 +10,7 @@ import me.enzopellegrini.transactionsummary.data.Transaction
 
 class TransactionsAdapter(
     private val all: List<Transaction>,
-    val onClickListener: (Int) -> Unit,
+    val onClickListener: (Transaction) -> Unit,
 ) : RecyclerView.Adapter<TransactionsAdapter.ViewHolder>() {
 
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
@@ -30,7 +30,7 @@ class TransactionsAdapter(
         holder.amountView.text = "${all[position].amount}$"
 
         holder.view.setOnClickListener {
-            onClickListener(position)
+            onClickListener(all[position])
         }
     }
 

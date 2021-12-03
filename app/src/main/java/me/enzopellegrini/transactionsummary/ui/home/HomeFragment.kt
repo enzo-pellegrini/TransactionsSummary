@@ -1,22 +1,18 @@
 package me.enzopellegrini.transactionsummary.ui.home
 
 import android.os.Bundle
-import android.text.Layout
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.chip.Chip
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import me.enzopellegrini.transactionsummary.R
 import me.enzopellegrini.transactionsummary.data.Transaction
@@ -34,7 +30,7 @@ class HomeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         // Navigate to the login fragment if not logged in
@@ -42,14 +38,17 @@ class HomeFragment : Fragment() {
             if (!it) navigateToLogin()
         }
 
-
-        commonViewModel.hasAccounts.observe(viewLifecycleOwner) {
-            if (it) {
+        commonViewModel.hasAccounts.observe(viewLifecycleOwner) { hasAccounts ->
+            if (hasAccounts) {
                 binding.goToAccounts.visibility = INVISIBLE
                 binding.transactionsList.visibility = VISIBLE
+
                 viewModel.transactions.observe(viewLifecycleOwner) { transactions ->
-                    setupRecyclerView(transactions)
+                    setupRecyclerView(transactions) {
+                        openTransaction(it)
+                    }
                 }
+
             } else {
                 binding.transactionsList.visibility = INVISIBLE
                 binding.goToAccounts.visibility = VISIBLE
@@ -60,29 +59,26 @@ class HomeFragment : Fragment() {
             findNavController().navigate(R.id.navigation_accounts)
         }
 
-
         viewModel.categoriesSelected.observe(viewLifecycleOwner) { categories ->
             setupFilterGroup(categories)
         }
-
-        val testSheet = TransactionSheet()
-        activity?.let { testSheet.show(it.supportFragmentManager, TransactionSheet.TAG) }
 
         return binding.root
     }
 
 
 
-    private fun setupRecyclerView(all: List<Transaction>) {
+    private fun setupRecyclerView(all: List<Transaction>, onClick: (Transaction) -> Unit) {
         val adapter = TransactionsAdapter(all) {
-            val action = HomeFragmentDirections
-                .actionNavigationHomeToTransactionPage(it)
-            findNavController().navigate(action)
+            onClick(it)
         }
 
         binding.transactionsList.adapter = adapter
         binding.transactionsList.layoutManager = LinearLayoutManager(context)
     }
+
+    private fun openTransaction(t: Transaction) =
+        TransactionSheet(t).show(requireActivity().supportFragmentManager, TransactionSheet.TAG)
 
     private fun setupFilterGroup(categoryMap: Map<String, LiveData<Boolean>>) {
         binding.filterChipGroup.removeAllViews()
