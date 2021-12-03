@@ -35,3 +35,10 @@ This screens are:
 
 # Architecture
 The backend is firebase, with firestore, some firestore triggers, and some serveless functions that can be called by the app.
+
+
+# Demo
+
+
+https://user-images.githubusercontent.com/72909384/144682936-f61e8887-360e-42dd-ac42-5e2d2b224978.mp4
+
