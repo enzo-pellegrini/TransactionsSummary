@@ -41,6 +41,7 @@ class HomeFragment : Fragment() {
         commonViewModel.hasAccounts.observe(viewLifecycleOwner) { hasAccounts ->
             if (hasAccounts) {
                 binding.goToAccounts.visibility = INVISIBLE
+                binding.goRightText.visibility = INVISIBLE
                 binding.transactionsList.visibility = VISIBLE
 
                 viewModel.transactions.observe(viewLifecycleOwner) { transactions ->
@@ -52,6 +53,7 @@ class HomeFragment : Fragment() {
             } else {
                 binding.transactionsList.visibility = INVISIBLE
                 binding.goToAccounts.visibility = VISIBLE
+                binding.goRightText.visibility = VISIBLE
             }
         }
 

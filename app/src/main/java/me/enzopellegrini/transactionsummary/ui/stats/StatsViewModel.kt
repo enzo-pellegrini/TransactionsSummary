@@ -18,15 +18,6 @@ class StatsViewModel @Inject constructor(
     private val transactionRepository: TransactionRepository
 ): ViewModel() {
 
-//    val pieData = Transformations.map(transactionRepository.summary) { summary ->
-//        summary
-//            .toList()
-//            .map { p -> ValueDataEntry(
-//                p.first,
-//                p.second.sum
-//            ) }
-//    }
-
 
     val pieData = Transformations.map(transactionRepository.categorySummary) { summary ->
         // Weird api

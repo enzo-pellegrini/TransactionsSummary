@@ -21,4 +21,6 @@
     <string name="left_arrow">Left Arrow</string>
     <string name="share_account">Share account</string>
     <string name="filter_transactions">Filter transactions</string>
+    <string name="go_right">Go right</string>
+    <string name="need_account">Add an account first</string>
 </resources>

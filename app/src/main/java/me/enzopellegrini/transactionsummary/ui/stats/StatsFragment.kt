@@ -6,6 +6,8 @@ import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -35,6 +37,7 @@ class StatsFragment : Fragment() {
         _binding = FragmentStatsBinding.inflate(inflater, container, false)
         val view = binding.root
 
+
         activityViewModel.isLoggedIn.observe(viewLifecycleOwner) { loggedIn ->
             if (!loggedIn) {
                 findNavController().navigate(R.id.firebaseLogin)
@@ -42,13 +45,31 @@ class StatsFragment : Fragment() {
         }
 
 
-        viewModel.pieData.observe(viewLifecycleOwner) { data ->
-            setupCategoryChart(data)
+        activityViewModel.hasAccounts.observe(viewLifecycleOwner) {
+            if (it) {
+                binding.goRightText.visibility = INVISIBLE
+                binding.goToAccounts.visibility = INVISIBLE
+                binding.categoryChart.visibility = VISIBLE
+                binding.accountChart.visibility = VISIBLE
+
+                viewModel.pieData.observe(viewLifecycleOwner) { data ->
+                    setupCategoryChart(data)
+                }
+
+                viewModel.lineData.observe(viewLifecycleOwner) { (data, labels) ->
+                    setupAccountChart(data, labels)
+                }
+            }
+            else {
+                binding.goRightText.visibility = VISIBLE
+                binding.goToAccounts.visibility = VISIBLE
+                binding.categoryChart.visibility = INVISIBLE
+                binding.accountChart.visibility = INVISIBLE
+            }
         }
 
-
-        viewModel.lineData.observe(viewLifecycleOwner) { (data, labels) ->
-            setupAccountChart(data, labels)
+        binding.goToAccounts.setOnClickListener {
+            findNavController().navigate(R.id.navigation_accounts)
         }
 
 
