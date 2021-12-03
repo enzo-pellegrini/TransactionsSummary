@@ -8,6 +8,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import me.enzopellegrini.transactionsummary.R
 import me.enzopellegrini.transactionsummary.data.Transaction
 import me.enzopellegrini.transactionsummary.databinding.TransactionSheetContentBinding
+import me.enzopellegrini.transactionsummary.toDollars
 
 class TransactionSheet(val transaction: Transaction) : BottomSheetDialogFragment() {
 
@@ -19,7 +20,7 @@ class TransactionSheet(val transaction: Transaction) : BottomSheetDialogFragment
         val binding = TransactionSheetContentBinding.inflate(inflater, container, false)
 
         binding.transactionName.text = transaction.name
-        binding.transactionAmount.text  = transaction.amount.toString()+"$" // TODO: Proper Currency Formatting
+        binding.transactionAmount.text  = transaction.amount.toDollars()
         binding.transactionCategory.text = transaction.category
 
         return binding.root

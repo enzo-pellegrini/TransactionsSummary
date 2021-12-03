@@ -23,6 +23,8 @@ import androidx.annotation.MainThread
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import java.text.NumberFormat
+import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 
 
@@ -51,4 +53,11 @@ class SingleLiveEvent<T> : MutableLiveData<T>() {
         mPending.set(true)
         super.setValue(value)
     }
+}
+
+
+fun Double.toDollars(): String {
+    val numberFormat = NumberFormat.getCurrencyInstance(Locale.US)
+    numberFormat.maximumFractionDigits = 2
+    return numberFormat.format(this)
 }

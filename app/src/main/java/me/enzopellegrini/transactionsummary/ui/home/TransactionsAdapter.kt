@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import me.enzopellegrini.transactionsummary.R
 import me.enzopellegrini.transactionsummary.data.Transaction
+import me.enzopellegrini.transactionsummary.toDollars
 
 class TransactionsAdapter(
     private val all: List<Transaction>,
@@ -29,7 +30,7 @@ class TransactionsAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         all[position].let {
             holder.nameView.text = it.name
-            holder.amountView.text = "${it.amount}$"
+            holder.amountView.text = it.amount.toDollars()
             holder.categoryView.text = it.category
         }
 
