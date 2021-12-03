@@ -16,6 +16,7 @@ class TransactionsAdapter(
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val nameView: TextView = view.findViewById(R.id.transaction_name)
         val amountView: TextView = view.findViewById(R.id.transaction_amount)
+        val categoryView: TextView = view.findViewById(R.id.transaction_category)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -26,8 +27,11 @@ class TransactionsAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.nameView.text = all[position].name
-        holder.amountView.text = "${all[position].amount}$"
+        all[position].let {
+            holder.nameView.text = it.name
+            holder.amountView.text = "${it.amount}$"
+            holder.categoryView.text = it.category
+        }
 
         holder.view.setOnClickListener {
             onClickListener(all[position])

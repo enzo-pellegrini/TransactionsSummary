@@ -2,29 +2,44 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:paddingStart="16dp"
+    android:paddingEnd="18dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
         android:id="@+id/transaction_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="hei" />
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@id/transaction_amount"
+        android:text="Mocca" />
+
+
+    <TextView
+        android:id="@+id/transaction_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?attr/textAppearanceBody2"
+        style="body2"
+        android:layout_below="@id/transaction_name"
+        android:layout_marginTop="2dp"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@id/transaction_amount"
+        android:text="Transportation" />
+
 
     <TextView
         android:id="@+id/transaction_amount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:textAppearance="?attr/textAppearanceBody1"
+        android:layout_marginLeft="12dp"
+        android:layout_alignParentEnd="true"
         android:text="30$"
-        android:padding="16dp" />
-
-<!--    <com.google.android.material.divider.MaterialDivider-->
-<!--        android:layout_below="@id/transaction_name"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        app:dividerInsetEnd="20dp"-->
-<!--        app:dividerInsetStart="32dp" />-->
+        android:layout_centerVertical="true" />
 
 
 </RelativeLayout>
