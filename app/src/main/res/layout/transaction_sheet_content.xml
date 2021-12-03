@@ -5,11 +5,39 @@
     android:layout_height="wrap_content"
     android:layout_margin="12dp"
     android:elevation="52dp"
-    android:outlineSpotShadowColor="@color/black">
+    android:outlineSpotShadowColor="@color/black"
+    android:padding="12dp" >
 
     <TextView
+        android:id="@+id/transaction_name"
+        style="?attr/textAppearanceHeadline5"
+        android:textSize="32sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ciao" />
+        android:layout_alignParentStart="true"
+        android:layout_marginRight="12dp"
+        android:layout_toStartOf="@id/transaction_amount"
+        android:text="Titolo" />
+
+    <TextView
+        android:id="@+id/transaction_amount"
+        style="?attr/textAppearanceHeadline5"
+        android:textSize="45sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:text="10$" />
+
+    <TextView
+        android:id="@+id/transaction_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textAppearance="?attr/subtitle"
+        android:text="FUN"
+        android:layout_below="@id/transaction_name"
+        android:layout_alignParentStart="true"
+        android:paddingStart="16dp" />
 
 </RelativeLayout>
